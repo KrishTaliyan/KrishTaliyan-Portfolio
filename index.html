@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krish Taliyan | Premium Full-Stack Portfolio</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ==========================================================================
+           1. CSS VARIABLES & DESIGN TOKENS
+           Modify these to change the entire theme of the website easily.
+           ========================================================================== */
+        :root {
+            /* Color Palette */
+            --bg-base: #050505; /* Deepest Obsidian */
+            --glass-bg: rgba(20, 20, 20, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            
+            /* Primary Accents - Neon Emerald & Purple Theme */
+            --primary: #22c55e; /* Neon Emerald Green */
+            --primary-glow: rgba(34, 197, 94, 0.5);
+            --secondary: #a855f7; /* Vibrant Purple */
+            --accent: #ec4899; /* Hot Pink Accent */
+            
+            /* Typography Colors */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            /* Layout Settings */
+            --nav-height: 80px;
+            --max-width: 1400px;
+            
+            /* Transitions */
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* ==========================================================================
+           2. GLOBAL RESET & BASE STYLES
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* Hide default cursor on desktop for custom cursor, show on mobile */
+            cursor: none; 
+        }
+
+        @media (max-width: 768px) {
+            * { cursor: auto; } /* Restore cursor on mobile */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-base);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* ==========================================================================
+           3. BACKGROUND VISUALS (CANVAS & AURORA)
+           ========================================================================== */
+        /* The canvas element for the interactive particle network */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        /* Aurora Glowing Orbs */
+        .aurora-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -3;
+            overflow: hidden;
+            background: var(--bg-base);
+        }
+        .blob {
+            position: absolute;
+            filter: blur(120px);
+            opacity: 0.4;
+            border-radius: 50%;
+            animation: float 25s infinite ease-in-out alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: radial-gradient(circle, var(--secondary) 0%, transparent 70%); }
+        .blob-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%); animation-delay: -5s; }
+        .blob-3 { top: 30%; left: 50%; width: 45vw; height: 45vw; background: radial-gradient(circle, rgba(236, 72, 153, 0.2) 0%, transparent 70%); animation-delay: -10s; }
+        
+        @keyframes float { 
+            0% { transform: translate(0, 0) scale(1); } 
+            100% { transform: translate(15%, 20%) scale(1.1); } 
+        }
+
+        /* ==========================================================================
+           4. CUSTOM CURSOR
+           ========================================================================== */
+        .cursor-dot {
+            position: fixed;
+            top: 0; left: 0;
+            width: 8px; height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        .cursor-outline {
+            position: fixed;
+            top: 0; left: 0;
+            width: 40px; height: 40px;
+            border: 2px solid var(--primary-glow);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s, border-color 0.2s;
+        }
+        
+        /* Cursor Hover States */
+        .cursor-dot.hovering { width: 0; height: 0; } /* Hide dot on hover */
+        .cursor-outline.hovering {
+            width: 60px; height: 60px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: white;
+            backdrop-filter: blur(2px);
+        }
+
+        @media (max-width: 768px) {
+            .cursor-dot, .cursor-outline { display: none; }
+        }
+
+        /* ==========================================================================
+           5. NAVIGATION BAR (SCROLL-SPY & MOBILE)
+           ========================================================================== */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1000px;
+            height: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            border-radius: 40px;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            z-index: 1000;
+            transition: var(--transition-smooth);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-main);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        .logo span { color: var(--primary); }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            position: relative;
+            padding: 5px 0;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-main);
+        }
+
+        /* Active Indicator Underline */
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Mobile Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text-main);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 900px) {
+            .hamburger { display: flex; }
+            .nav-links {
+                position: fixed;
+                top: 0; left: 0;
+                width: 100vw; height: 100vh;
+                background: rgba(5, 5, 5, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 40px;
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.4s ease;
+            }
+            .nav-links.nav-active {
+                opacity: 1;
+                pointer-events: all;
+            }
+            .nav-links .nav-link { font-size: 1.5rem; }
+            
+            /* Hamburger Animation to X */
+            .hamburger.toggle span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+            .hamburger.toggle span:nth-child(2) { opacity: 0; }
+            .hamburger.toggle span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+        }
+
+        /* ==========================================================================
+           6. GLASSMORPHISM UTILITIES & REUSABLE COMPONENTS
+           ========================================================================== */
+        section {
+            padding: 140px 5% 60px;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 50px;
+            text-align: center;
+            background: linear-gradient(135deg, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        /* Global Glass Panel Box */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+        .glass-panel:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Glow effect on hover */
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .glass-panel:hover::before { left: 150%; }
+
+        /* Ensure text stays above glow */
+        .glass-panel > * { position: relative; z-index: 1; }
+
+        /* Scroll Reveal Classes */
+        .blur-reveal {
+            opacity: 0;
+            filter: blur(15px);
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .blur-reveal.active {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+        }
+
+        /* Buttons */
+        .btn-magnetic {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 18px 45px;
+            border-radius: 50px;
+            font-weight: 800;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: var(--text-main);
+            color: var(--bg-base);
+            transition: background 0.3s, transform 0.1s; /* Transform handled by JS */
+            border: none;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-magnetic:hover {
+            background: var(--primary);
+            box-shadow: 0 0 30px var(--primary-glow);
+        }
+
+        /* Tag Clouds for Skills */
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .tag {
+            background: rgba(255,255,255,0.03);
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.08);
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: var(--text-main);
+        }
+        .tag:hover {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            transform: scale(1.05) translateY(-2px);
+            border-color: transparent;
+            box-shadow: 0 5px 15px var(--primary-glow);
+        }
+
+        /* ==========================================================================
+           7. HERO SECTION
+           ========================================================================== */
+        header {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 80px;
+            position: relative;
+        }
+        .hero-img-container {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin-bottom: 25px;
+            padding: 4px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.4);
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--bg-base);
+        }
+
+        .hero-social-links {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            margin-top: 35px;
+            z-index: 2;
+        }
+
+        .hero-social-icon {
+            color: var(--text-muted);
+            font-size: 2rem;
+            transition: var(--transition-smooth);
+            text-decoration: none;
+        }
+
+        .hero-social-icon:hover {
+            color: var(--primary);
+            transform: translateY(-5px) scale(1.1);
+            text-shadow: 0 0 20px var(--primary-glow);
+        }
+        .hero-badge {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            backdrop-filter: blur(4px);
+        }
+
+        header h1 {
+            font-size: clamp(3rem, 7vw, 6.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            letter-spacing: -2px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, var(--primary), var(--secondary), var(--accent), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 300% auto;
+            animation: gradientMove 6s linear infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% center; }
+            100% { background-position: 300% center; }
+        }
+        
+        header p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-muted);
+            max-width: 650px;
+            margin-bottom: 40px;
+        }
+
+        /* ==========================================================================
+           8. BENTO GRID (ABOUT ME & SKILLS)
+           ========================================================================== */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: minmax(200px, auto);
+            gap: 25px;
+        }
+        
+        .bento-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* Grid Spans */
+        .bento-about { grid-column: span 2; grid-row: span 2; }
+        .bento-stats { grid-column: span 1; grid-row: span 1; text-align: center; align-items: center; justify-content: center;}
+        .bento-skills { grid-column: span 2; grid-row: span 2; }
+        .bento-tech { grid-column: span 1; grid-row: span 2; }
+
+        .bento-item h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .bento-item p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        @media (max-width: 1024px) {
+            .bento-grid { grid-template-columns: 1fr 1fr; }
+            .bento-about, .bento-skills { grid-column: span 2; }
+        }
+        @media (max-width: 768px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-about, .bento-skills, .bento-tech, .bento-stats { grid-column: span 1; grid-row: auto;}
+        }
+
+        /* ==========================================================================
+           9. EXPERIENCE & EDUCATION TIMELINE
+           ========================================================================== */
+        .timeline-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline-row {
+            display: flex;
+            gap: 40px;
+            align-items: stretch;
+        }
+
+        .timeline-time {
+            width: 160px;
+            flex-shrink: 0;
+            text-align: right;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.2rem;
+            padding-top: 35px;
+        }
+
+        /* The vertical line and glowing dot */
+        .timeline-divider {
+            width: 2px;
+            background: rgba(255,255,255,0.1);
+            position: relative;
+        }
+        .timeline-divider::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--bg-base);
+            border: 4px solid var(--secondary);
+            border-radius: 50%;
+            left: -9px;
+            top: 38px;
+            box-shadow: 0 0 20px var(--secondary);
+            z-index: 2;
+        }
+
+        .timeline-content {
+            flex-grow: 1;
+        }
+        .timeline-content h3 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+            color: var(--text-main);
+        }
+        .timeline-content h4 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .timeline-row { flex-direction: column; gap: 15px; }
+            .timeline-time { text-align: left; width: auto; padding-top: 0; font-size: 1rem;}
+            .timeline-divider { display: none; }
+        }
+
+        /* ==========================================================================
+           10. PROJECTS GRID
+           ========================================================================== */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 35px;
+        }
+
+        .project-card {
+            padding: 0; 
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .project-content {
+            padding: 40px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-date {
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            display: inline-block;
+        }
+
+        .project-card h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .project-card p {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+            flex-grow: 1; /* Pushes tags to the bottom */
+        }
+
+        /* ==========================================================================
+           11. CONTACT SECTION
+           ========================================================================== */
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .social-links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .social-big {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 25px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.02);
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: var(--transition-smooth);
+        }
+        .social-big:hover {
+            border-color: var(--primary);
+            background: rgba(34, 197, 94, 0.05);
+            transform: translateX(10px); /* Slide right effect */
+        }
+        .social-big i {
+            font-size: 1.8rem;
+            color: var(--primary);
+            width: 30px;
+            text-align: center;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .input-group input, 
+        .input-group textarea {
+            width: 100%;
+            padding: 18px 25px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+            outline: none;
+        }
+        .input-group input:focus, 
+        .input-group textarea:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+            background: rgba(0,0,0,0.5);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            border: none;
+            background: var(--primary);
+            color: #000;
+            font-weight: 800;
+            font-size: 1.1rem;
+            transition: var(--transition-smooth);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .submit-btn:hover {
+            background: white;
+            box-shadow: 0 0 30px rgba(255,255,255,0.5);
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 992px) {
+            .contact-wrapper { grid-template-columns: 1fr; }
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+    <div class="aurora-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <nav id="navbar">
+        <a href="#hero" class="logo hover-target">Krish<span> Taliyan</span></a>
+        
+        <div class="nav-links" id="nav-links">
+            <a href="#hero" class="nav-link hover-target">Intro</a>
+            <a href="#about" class="nav-link hover-target">About & Skills</a>
+            <a href="#experience" class="nav-link hover-target">Experience</a>
+            <a href="#projects" class="nav-link hover-target">Projects</a>
+            <a href="#achievements" class="nav-link hover-target">Achievements</a>
+            <a href="#certifications" class="nav-link hover-target">Certifications</a>
+            <a href="#contact" class="nav-link hover-target">Contact</a>
+        </div>
+
+        <div class="hamburger hover-target" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+   <header id="hero" class="section-spy">
+        <div class="hero-img-container blur-reveal">
+            <img src="profile.jpg.jpg" alt="Krish Taliyan" class="hero-img">
+        </div>
+
+        <div class="hero-badge blur-reveal" style="transition-delay: 0.1s;">Full Stack Developer | Building Scalable MERN Apps</div>
+        <h1 class="blur-reveal" style="transition-delay: 0.2s;">Hi, I'm <span class="gradient-text">Krish Taliyan</span></h1>
+        <p class="blur-reveal" style="transition-delay: 0.3s;">
+            Transforming complex problems into elegant, scalable solutions through code. Specializing in MERN stack architecture, teamwork, problem-solving, and time management.
+        </p>
+        
+       <div class="blur-reveal" style="transition-delay: 0.4s; margin-top: 10px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; z-index: 2;">
+            <a href="#projects" class="btn-magnetic hover-target magnetic-element" style="background: var(--primary); color: #000; box-shadow: 0 0 20px var(--primary-glow);">
+                <i class="fas fa-eye"></i> View My Work
+            </a>
+            
+            <a href="./Krish_Taliyan_CV_New1.pdf" download="Krish_Taliyan_Resume.pdf" class="btn-magnetic hover-target magnetic-element" style="background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid rgba(255,255,255,0.2);">
+                <i class="fas fa-file-pdf"></i> Download Resume
+            </a>
+        </div>
+
+        <div class="hero-social-links blur-reveal" style="transition-delay: 0.5s;">
+            <a href="https://github.com/KrishTaliyan" target="_blank" class="hero-social-icon hover-target" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/krish-taliyan/" target="_blank" class="hero-social-icon hover-target" title="LinkedIn">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="mailto:krishtaliyan132@gmail.com" class="hero-social-icon hover-target" title="Email">
+                <i class="fas fa-envelope"></i>
+            </a>
+        </div>
+    </header>
+
+    <section id="about" class="section-spy">
+        <h2 class="section-title blur-reveal">About Me & Technical Arsenal</h2>
+        <div class="bento-grid">
+            
+            <div class="glass-panel bento-item bento-about blur-reveal">
+                <h3><i class="fas fa-terminal" style="color: var(--primary);"></i> About Me</h3>
+                <p>
+                    I am a passionate Full-Stack Developer currently pursuing my Bachelor of Technology in Computer Science and Engineering at Lovely Professional University. I maintain a strong academic record with a <strong>CGPA of 8.08</strong>, while continuously expanding my practical skills. From solving complex algorithmic challenges to building full-scale MERN applications, I am driven by continuous learning and pushing technical boundaries.
+                </p>
+            </div>
+
+            <div class="glass-panel bento-item bento-stats blur-reveal" style="transition-delay: 0.1s;">
+                <div class="stat-number">300+</div>
+                <p>Coding problems solved across data structures & algorithms on LeetCode</p>
+            </div>
+
+            <div class="glass-panel bento-item bento-stats blur-reveal" style="transition-delay: 0.2s;">
+                <div class="stat-number" style="color: #ffd700; text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);">
+                    5 <i class="fas fa-star" style="font-size: 2.5rem; margin-bottom: 5px;"></i>
+                </div>
+                <p>Gold rating achieved in Java on HackerRank</p>
+            </div>
+
+            <div class="glass-panel bento-item bento-tech blur-reveal">
+                <h3>Languages</h3>
+                <div class="tag-cloud">
+                    <span class="tag">Python</span>
+                    <span class="tag">C</span>
+                    <span class="tag">C++</span>
+                    <span class="tag">Java</span>
+                    <span class="tag">JavaScript</span>
+                </div>
+                <h3 style="margin-top: 40px; margin-bottom: 15px;">Certifications</h3>
+                <p style="font-size: 1rem; color: var(--text-muted); margin-bottom: 8px;">
+                    <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 8px;"></i> Software Development | Coursera
+                </p>
+                <p style="font-size: 1rem; color: var(--text-muted);">
+                    <i class="fas fa-check-circle" style="color: var(--primary); margin-right: 8px;"></i> Git and Github | CipherSchools
+                </p>
+            </div>
+
+            <div class="glass-panel bento-item bento-skills blur-reveal" style="transition-delay: 0.1s;">
+                <h3>Web Technologies & Tools</h3>
+                <div class="tag-cloud">
+                    <span class="tag">React</span> <span class="tag">Next.js</span>
+                    <span class="tag">Node.js</span> <span class="tag">Express.js</span>
+                    <span class="tag">MongoDB</span> <span class="tag">MySQL</span>
+                    <span class="tag">Tailwind CSS</span> <span class="tag">REST APIs</span>
+                    <span class="tag">Authentication (JWT)</span> <span class="tag">HTML</span>
+                    <span class="tag">CSS</span>
+                    <span class="tag">GitHub</span> <span class="tag">VS Code</span>
+                    <span class="tag">Linux/Ubuntu</span> <span class="tag">Postman</span>
+                    <span class="tag">XAMPP</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="section-spy">
+        <h2 class="section-title blur-reveal">Experience, Training & Education</h2>
+        <div class="timeline-container">
+            
+            <div class="timeline-row blur-reveal">
+                <div class="timeline-time">Jul' 25</div>
+                <div class="timeline-divider"></div>
+                <div class="glass-panel timeline-content">
+                    <h3>MERN Stack Development</h3>
+                    <h4>Cipher Schools (Edtech Company)</h4>
+                    <p>
+                        Expanded full-stack applications using MongoDB, Express.js, React, and Node.js, strengthening backend-frontend integration and accelerating feature delivery by 30%. Implemented CRUD operation, REST APIs, and component-based UI development to enhance the application scalability and improve response efficiency by 25%. Gained hands-on experience in authentication, routing, and state management, resulting a 35% improvement in overall project functionality and practical implementation skills.
+                    </p>
+                </div>
+            </div>
+
+            <div class="timeline-row blur-reveal">
+                <div class="timeline-time">Aug 23 - Present</div>
+                <div class="timeline-divider"></div>
+                <div class="glass-panel timeline-content">
+                    <h3>Bachelor of Technology</h3>
+                    <h4>Lovely Professional University | Phagwara, Punjab</h4>
+                    <p>Computer Science and Engineering. Current CGPA: <strong>8.08</strong>.</p>
+                </div>
+            </div>
+
+            <div class="timeline-row blur-reveal">
+                <div class="timeline-time">Mar' 21 - May' 22</div>
+                <div class="timeline-divider"></div>
+                <div class="glass-panel timeline-content">
+                    <h3>Intermediate PCM</h3>
+                    <h4>J.P International School | Meerut, Uttar Pradesh</h4>
+                    <p>Graduated with a Percentage of <strong>91%</strong>.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="projects" class="section-spy">
+        <h2 class="section-title blur-reveal">Projects Portfolio</h2>
+        <div class="projects-grid">
+            
+            <div class="glass-panel project-card blur-reveal hover-target">
+                <div class="project-content">
+                    <span class="project-date">Jan' 26 • Full Stack</span>
+                    <h3>NearBite - Food Delivery Platform</h3>
+                    <p>
+                        Engineered a food delivery platform enabling users to discover nearby vendors, manage cart operations and, complete seamless checkout workflows across an integrated MERN stack system. Secured application route and APIs using JWT-based authentication with role-based access (User/Restaurant), ensuring controlled data flow and scalable backend architecture. Delivered responsive React + Tailwind interface with optimized API communication via Axios.
+                    </p>
+                    <div class="tag-cloud" style="margin-bottom: 25px;">
+                        <span class="tag">MongoDB</span>
+                        <span class="tag">Express.js</span>
+                        <span class="tag">React</span>
+                        <span class="tag">Node.js</span>
+                    </div>
+
+                    <a href="https://github.com/sanjuvemula/NearBytes" target="_blank" class="hover-target" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; margin-top: auto;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--primary)'">
+                        <i class="fab fa-github" style="font-size: 1.3rem;"></i> View Source Code
+                    </a>
+                </div>
+            </div>
+
+           <div class="glass-panel project-card blur-reveal hover-target" style="transition-delay: 0.1s;">
+                <div class="project-content">
+                    <span class="project-date">Nov' 25 • Full Stack</span>
+                    <h3>Startup-to-Corporate Connect</h3>
+                    <p>
+                        Developed a full-stack platform enabling startups and corporates to connect, collaborate, and explore partnership opportunities through structured profiles and role-based dashboards. Implemented secure authentication and authorization using JWT with middleware-based role access control. Designed a responsive React + Tailwind interface and integrated Axios for seamless frontend-backend communication.
+                    </p>
+                    <div class="tag-cloud" style="margin-bottom: 25px;">
+                        <span class="tag">MERN Stack</span>
+                        <span class="tag">JWT Auth</span>
+                        <span class="tag">Tailwind CSS</span>
+                    </div>
+                    
+                    <a href="https://github.com/KrishTaliyan/Startup-to-Corporate-Project" target="_blank" class="hover-target" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; margin-top: auto;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--primary)'">
+                        <i class="fab fa-github" style="font-size: 1.3rem;"></i> View Source Code
+                    </a>
+                </div>
+            </div>
+
+            <div class="glass-panel project-card blur-reveal hover-target" style="transition-delay: 0.2s;">
+                <div class="project-content">
+                    <span class="project-date">Jul' 25 • Utility App</span>
+                    <h3>Notepad Application</h3>
+                    <p>
+                        Programmed and optimized CRUD operations for note management using MongoDB and Express.js, ensuring 90% reliability and reducing API response time by 35% through efficient design and query handling. Deployed a responsive and intuitive UI in React; improved user task completion speed by 40% due to clean component design. Implemented secure backend integration with Node.js and deployed the full-stack app, resulting in stable performance.
+                    </p>
+                    <div class="tag-cloud" style="margin-bottom: 25px;">
+                        <span class="tag">CRUD</span>
+                        <span class="tag">React</span>
+                        <span class="tag">Node.js</span>
+                    </div>
+
+                    <a href="https://github.com/KrishTaliyan/NotePad" target="_blank" class="hover-target" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; margin-top: auto;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--primary)'">
+                        <i class="fab fa-github" style="font-size: 1.3rem;"></i> View Source Code
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="achievements" class="section-spy">
+        <h2 class="section-title blur-reveal">Hackathons & Open Source</h2>
+        <div class="bento-grid">
+            
+            <div class="glass-panel bento-item bento-skills blur-reveal">
+                <h3><i class="fas fa-trophy" style="color: #ffd700;"></i> Competitive Programming & Hackathons</h3>
+                <p style="margin-bottom: 20px;">
+                    I actively test my problem-solving skills under pressure through competitive programming platforms and live hackathons, continuously refining my algorithmic logic.
+                </p>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 15px; display: flex; align-items: start; gap: 10px;">
+                        <i class="fas fa-check" style="color: var(--primary); margin-top: 5px;"></i>
+                        <span style="color: var(--text-muted);">Solved 300+ coding problems across data structures and algorithms on LeetCode.</span>
+                    </li>
+                    <li style="margin-bottom: 15px; display: flex; align-items: start; gap: 10px;">
+                        <i class="fas fa-check" style="color: var(--primary); margin-top: 5px;"></i>
+                        <span style="color: var(--text-muted);">Achieved 5-star (Gold) rating in Java on HackerRank.</span>
+                    </li>
+                    <li style="display: flex; align-items: start; gap: 10px;">
+                        <i class="" style="color: var(--secondary); margin-top: 5px;"></i>
+                        <span style=""><em></em></span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="glass-panel bento-item bento-skills blur-reveal" style="border-color: rgba(168, 85, 247, 0.3);">
+                <h3><i class="fab fa-osi" style="color: var(--secondary);"></i> Open Source Contributions</h3>
+                <p>
+                    I am passionate about collaborative software development and giving back to the community by contributing to open-source repositories and building public tools.
+                </p>
+                <div>
+                    
+                    
+                    
+                </div>
+            </div>
+
+        </div>
+    </section>
+<section id="certifications" class="section-spy">
+        <h2 class="section-title blur-reveal">Certifications</h2>
+        
+        <div class="projects-grid">
+            
+            <div class="glass-panel project-card blur-reveal hover-target" style="padding: 0;">
+                <div class="project-content" style="padding: 30px;">
+                    <span class="project-date" style="color: var(--primary);">Coursera</span>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Software Development</h3>
+                    
+                    <img src="Coursera.png" alt="Coursera Certificate" style="width: 100%; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+                    
+                    <p style="font-size: 0.95rem; margin-bottom: 0; color: var(--text-muted);">
+                        Completed a comprehensive certification focusing on core software development principles, clean coding practices, and modern methodologies.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="glass-panel project-card blur-reveal hover-target" style="transition-delay: 0.1s; padding: 0;">
+                <div class="project-content" style="padding: 30px;">
+                    <span class="project-date" style="color: var(--primary);">CipherSchools</span>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Git and Github</h3>
+                    
+                    <img src="Github.png" alt="CipherSchools Certificate" style="width: 100%; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+                    
+                    <p style="font-size: 0.95rem; margin-bottom: 0; color: var(--text-muted);">
+                        Mastered version control systems, repository management, branching strategies, and collaborative software development.
+                    </p>
+                </div>
+            </div>
+
+            <div class="glass-panel project-card blur-reveal hover-target" style="transition-delay: 0.2s; padding: 0;">
+                <div class="project-content" style="padding: 30px;">
+                    <span class="project-date" style="color: #FF9900;">Dec '24 • AWS x Forage</span>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Solutions Architecture</h3> 
+                    
+                    <img src="AWS.png" alt="AWS Certificate" style="width: 100%; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(255, 153, 0, 0.3); box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+                    
+                    <p style="font-size: 0.95rem; margin-bottom: 0; color: var(--text-muted);">
+                        Completed practical tasks in designing a simple, scalable, and secure hosting architecture.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="contact" class="section-spy">
+        <h2 class="section-title blur-reveal">Let's Connect</h2>
+        <div class="contact-wrapper">
+            
+            <div class="blur-reveal">
+                <p style="font-size: 1.25rem; margin-bottom: 40px; color: var(--text-muted); line-height: 1.8;">
+                    I'm currently looking for new opportunities. Whether you have a question about my projects, a potential role, or just want to say hi, my inbox is open!
+                </p>
+                
+                <div class="social-links-container">
+                    <a href="mailto:krishtaliyan132@gmail.com" class="social-big hover-target">
+                        <i class="fas fa-envelope"></i> krishtaliyan132@gmail.com
+                    </a>
+                    <a href="tel:+918273260384" class="social-big hover-target">
+                        <i class="fas fa-phone-alt"></i> +91 8273260384
+                    </a>
+                    <a href="https://www.linkedin.com/in/krish-taliyan/" target="_blank" class="social-big hover-target">
+                        <i class="fab fa-linkedin"></i> linkedin.com/krishTaliyan
+                    </a>
+                    <a href="https://github.com/KrishTaliyan" target="_blank" class="social-big hover-target">
+                        <i class="fab fa-github"></i> github.com/KrishTaliyan
+                    </a>
+                </div>
+            </div>
+
+            <div class="glass-panel blur-reveal">
+                <form class="contact-form" action="#" method="POST">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Send a Message</h3>
+                    <div class="input-group">
+                        <input type="text" placeholder="Your Name" required class="hover-target">
+                    </div>
+                    <div class="input-group">
+                        <input type="email" placeholder="Your Email Address" required class="hover-target">
+                    </div>
+                    <div class="input-group">
+                        <textarea rows="6" placeholder="Tell me about your project or inquiry..." required class="hover-target"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn hover-target magnetic-element">
+                        Send Message <i class="fas fa-paper-plane" style="margin-left: 10px;"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Krish Taliyan. Built from scratch with HTML, CSS, and JS.</p>
+    </footer>
+
+    <script>
+        // --- 1. Custom Interactive Cursor ---
+        const cursorDot = document.getElementById('cursor-dot');
+        const cursorOutline = document.getElementById('cursor-outline');
+        const hoverTargets = document.querySelectorAll('.hover-target, a, button');
+
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            // Instant follow for dot
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            // Delayed smooth follow for outline using Web Animations API
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        hoverTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => {
+                cursorDot.classList.add('hovering');
+                cursorOutline.classList.add('hovering');
+            });
+            target.addEventListener('mouseleave', () => {
+                cursorDot.classList.remove('hovering');
+                cursorOutline.classList.remove('hovering');
+            });
+        });
+
+        // --- 2. Magnetic Buttons Effect ---
+        const magneticElements = document.querySelectorAll('.magnetic-element');
+        magneticElements.forEach((elem) => {
+            elem.addEventListener('mousemove', (e) => {
+                const rect = elem.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                // Pull element gently towards mouse
+                elem.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+            elem.addEventListener('mouseleave', () => {
+                // Snap back to origin
+                elem.style.transform = `translate(0px, 0px)`;
+            });
+        });
+
+        // --- 3. Scroll Reveal Animation (Intersection Observer) ---
+        const revealElements = document.querySelectorAll('.blur-reveal');
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Only animate once per reload
+                }
+            });
+        }, { 
+            threshold: 0.1, 
+            rootMargin: "0px 0px -50px 0px" 
+        });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // --- 4. Mobile Hamburger Menu Toggle ---
+        const hamburger = document.getElementById('hamburger');
+        const navLinksContainer = document.getElementById('nav-links');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        hamburger.addEventListener('click', () => {
+            navLinksContainer.classList.toggle('nav-active');
+            hamburger.classList.toggle('toggle');
+        });
+
+        // Close mobile menu when a link is clicked
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (navLinksContainer.classList.contains('nav-active')) {
+                    navLinksContainer.classList.remove('nav-active');
+                    hamburger.classList.remove('toggle');
+                }
+            });
+        });
+
+        // --- 5. ScrollSpy (Highlight active navbar link) ---
+        const sections = document.querySelectorAll('.section-spy');
+        
+        window.addEventListener('scroll', () => {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                // Offset by nav height + some padding
+                if (pageYOffset >= (sectionTop - 150)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // --- 6. Interactive Canvas Particle Background ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        
+        // Setup canvas dimensions
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Mouse interaction object
+        const mouse = { x: null, y: null, radius: 150 };
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // Particle Class definition
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 0.5;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                // Slower movement speed for a premium feel
+                this.density = (Math.random() * 20) + 1;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+
+            draw() {
+                // Updated to Neon Emerald to match new theme
+                ctx.fillStyle = 'rgba(34, 197, 94, 0.5)'; 
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            update() {
+                // Continuous drifting
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if(this.x < 0 || this.x > width) this.vx *= -1;
+                if(this.y < 0 || this.y > height) this.vy *= -1;
+
+                // Mouse interaction (Repulsion effect)
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / distance;
+                let forceDirectionY = dy / distance;
+                
+                // Max distance, past that the force is 0
+                let maxDistance = mouse.radius;
+                let force = (maxDistance - distance) / maxDistance;
+                if (force < 0) force = 0;
+
+                let directionX = (forceDirectionX * force * this.density) * 0.6;
+                let directionY = (forceDirectionY * force * this.density) * 0.6;
+
+                if (distance < mouse.radius) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                }
+            }
+        }
+
+        // Initialize particle array
+        function initParticles() {
+            particles = [];
+            // Amount of particles scales with screen size
+            let numberOfParticles = (width * height) / 12000; 
+            for (let i = 0; i < numberOfParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        // Draw connecting lines between close particles
+        function connectParticles() {
+            let opacityValue = 1;
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    let dx = particles[a].x - particles[b].x;
+                    let dy = particles[a].y - particles[b].y;
+                    let distance = dx * dx + dy * dy;
+
+                    // If particles are close, draw a line
+                    if (distance < (width/10) * (height/10)) {
+                        opacityValue = 1 - (distance / 20000);
+                        // Updated to Deep Purple to match new theme
+                        ctx.strokeStyle = `rgba(168, 85, 247, ${opacityValue * 0.2})`; 
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Animation Loop
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            connectParticles();
+            requestAnimationFrame(animate);
+        }
+
+        // Start Background
+        initParticles();
+        animate();
+
+        // Handle window resizing gracefully
+        window.addEventListener('resize', () => {
+            initParticles();
+        });
+
+        // Ensure mouse object resets if mouse leaves window to prevent particles getting stuck
+        window.addEventListener('mouseout', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+    </script>
+</body>
+</html>
