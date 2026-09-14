@@ -656,6 +656,29 @@
             flex-grow: 1; /* Pushes tags to the bottom */
         }
 
+        .project-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin-top: auto;
+        }
+
+        .project-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .project-link:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
         /* ==========================================================================
            11. CONTACT SECTION
            ========================================================================== */
@@ -926,27 +949,32 @@
             
             <div class="glass-panel project-card blur-reveal hover-target">
                 <div class="project-content">
-                    <span class="project-date">Jan' 26 • Full Stack</span>
-                    <h3>NearBite - Food Delivery Platform</h3>
+                    <span class="project-date">Jun' 26 - Mobile App</span>
+                    <h3>NearBitez - Food Ordering Application</h3>
                     <p>
-                        Engineered a food delivery platform enabling users to discover nearby vendors, manage cart operations and, complete seamless checkout workflows across an integrated MERN stack system. Secured application route and APIs using JWT-based authentication with role-based access (User/Restaurant), ensuring controlled data flow and scalable backend architecture. Delivered responsive React + Tailwind interface with optimized API communication via Axios.
+                        Developed a cross-platform food ordering mobile application using React Native with reusable components, delivering a smooth Android experience. Integrated RESTful APIs built with Node.js and Express.js for authentication, restaurant discovery, cart management, and order processing. Implemented JWT authentication, protected routes, persistent login, and role-based access for customers and restaurant owners.
                     </p>
                     <div class="tag-cloud" style="margin-bottom: 25px;">
                         <span class="tag">MongoDB</span>
                         <span class="tag">Express.js</span>
-                        <span class="tag">React</span>
+                        <span class="tag">React Native</span>
                         <span class="tag">Node.js</span>
                     </div>
 
-                    <a href="https://github.com/sanjuvemula/NearBytes" target="_blank" class="hover-target" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; margin-top: auto;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--primary)'">
-                        <i class="fab fa-github" style="font-size: 1.3rem;"></i> View Source Code
-                    </a>
+                    <div class="project-links">
+                        <a href="https://near-bitez.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-link hover-target">
+                            <i class="fas fa-arrow-up-right-from-square" style="font-size: 1.1rem;"></i> Live Demo
+                        </a>
+                        <a href="https://github.com/sanjuvemula/NearBytes" target="_blank" rel="noopener noreferrer" class="project-link hover-target">
+                            <i class="fab fa-github" style="font-size: 1.3rem;"></i> View Source Code
+                        </a>
+                    </div>
                 </div>
             </div>
 
            <div class="glass-panel project-card blur-reveal hover-target" style="transition-delay: 0.1s;">
                 <div class="project-content">
-                    <span class="project-date">Nov' 25 • Full Stack</span>
+                    <span class="project-date">Nov' 25 - Full Stack</span>
                     <h3>Startup-to-Corporate Connect</h3>
                     <p>
                         Developed a full-stack platform enabling startups and corporates to connect, collaborate, and explore partnership opportunities through structured profiles and role-based dashboards. Implemented secure authentication and authorization using JWT with middleware-based role access control. Designed a responsive React + Tailwind interface and integrated Axios for seamless frontend-backend communication.
@@ -957,28 +985,38 @@
                         <span class="tag">Tailwind CSS</span>
                     </div>
                     
-                    <a href="https://github.com/KrishTaliyan/Startup-to-Corporate-Project" target="_blank" class="hover-target" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; margin-top: auto;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--primary)'">
-                        <i class="fab fa-github" style="font-size: 1.3rem;"></i> View Source Code
-                    </a>
+                    <div class="project-links">
+                        <a href="https://startup-to-corporate-project-fawn.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-link hover-target">
+                            <i class="fas fa-arrow-up-right-from-square" style="font-size: 1.1rem;"></i> Live Demo
+                        </a>
+                        <a href="https://github.com/KrishTaliyan/Startup-to-Corporate-Project" target="_blank" rel="noopener noreferrer" class="project-link hover-target">
+                            <i class="fab fa-github" style="font-size: 1.3rem;"></i> View Source Code
+                        </a>
+                    </div>
                 </div>
             </div>
 
             <div class="glass-panel project-card blur-reveal hover-target" style="transition-delay: 0.2s;">
                 <div class="project-content">
-                    <span class="project-date">Jul' 25 • Utility App</span>
-                    <h3>Notepad Application</h3>
+                    <span class="project-date">Feb' 25 - Fault Detection System</span>
+                    <h3>PowerSense AI - Power Consumption Optimizer</h3>
                     <p>
-                        Programmed and optimized CRUD operations for note management using MongoDB and Express.js, ensuring 90% reliability and reducing API response time by 35% through efficient design and query handling. Deployed a responsive and intuitive UI in React; improved user task completion speed by 40% due to clean component design. Implemented secure backend integration with Node.js and deployed the full-stack app, resulting in stable performance.
+                        Built an AI-powered web application to analyze and optimize power consumption, providing intelligent insights for efficient energy usage and decision-making. Created external APIs to process user input and generate real-time predictions and analysis, improving system responsiveness and accuracy.
                     </p>
                     <div class="tag-cloud" style="margin-bottom: 25px;">
-                        <span class="tag">CRUD</span>
-                        <span class="tag">React</span>
-                        <span class="tag">Node.js</span>
+                        <span class="tag">MERN Stack</span>
+                        <span class="tag">AI Insights</span>
+                        <span class="tag">React.js</span>
+                        <span class="tag">Tailwind CSS</span>
                     </div>
-
-                    <a href="https://github.com/KrishTaliyan/NotePad" target="_blank" class="hover-target" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 1.05rem; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; margin-top: auto;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='var(--primary)'">
-                        <i class="fab fa-github" style="font-size: 1.3rem;"></i> View Source Code
-                    </a>
+                    <div class="project-links">
+                        <a href="https://power-sense-ai-gamma.vercel.app/" target="_blank" rel="noopener noreferrer" class="project-link hover-target">
+                            <i class="fas fa-arrow-up-right-from-square" style="font-size: 1.1rem;"></i> Live Demo
+                        </a>
+                        <a href="https://github.com/KrishTaliyan/PowerSense-AI" target="_blank" rel="noopener noreferrer" class="project-link hover-target">
+                            <i class="fab fa-github" style="font-size: 1.3rem;"></i> View Source Code
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -1057,7 +1095,7 @@
 
             <div class="glass-panel project-card blur-reveal hover-target" style="transition-delay: 0.2s; padding: 0;">
                 <div class="project-content" style="padding: 30px;">
-                    <span class="project-date" style="color: #FF9900;">Dec '24 • AWS x Forage</span>
+                    <span class="project-date" style="color: #FF9900;">Dec '24 â€¢ AWS x Forage</span>
                     <h3 style="font-size: 1.5rem; margin-bottom: 15px;">Solutions Architecture</h3> 
                     
                     <img src="AWS.png" alt="AWS Certificate" style="width: 100%; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(255, 153, 0, 0.3); box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
