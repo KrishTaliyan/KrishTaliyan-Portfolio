@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { profile, projects, skillGroups, timeline } from '../data'
-
-const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+import { scrollToId } from '../lib/scroll'
 
 const commands = {
   help: () => [
@@ -33,7 +32,7 @@ const commands = {
   ls: () => ['about.md  skills.json  projects/  resume.pdf  contact.txt'],
   date: () => [new Date().toString()],
   sudo: () => ['Nice try 😄 — but you can just email me: ' + profile.email],
-  hire: () => ['Excellent choice! 🎉 Opening the contact section…', () => scrollTo('contact')],
+  hire: () => ['Excellent choice! 🎉 Opening the contact section…', () => scrollToId('contact')],
 }
 
 const intro = [
@@ -62,9 +61,9 @@ export default function Terminal() {
     if (name === 'clear') return setLines([])
     if (name === 'goto') {
       const target = args[0]
-      const el = target && document.getElementById(target === 'certs' ? 'certifications' : target)
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' })
+      const id = target === 'certs' ? 'certifications' : target
+      if (id && document.getElementById(id)) {
+        scrollToId(id)
         return setLines([...next, { type: 'out', text: `Jumping to #${target}…` }])
       }
       return setLines([...next, { type: 'err', text: 'Usage: goto home | about | skills | journey | projects | certs | contact' }])
@@ -113,7 +112,8 @@ export default function Terminal() {
       </div>
       <div
         ref={bodyRef}
-        onClick={() => inputRef.current?.focus()}
+        onClick={() => inputRef.current?.focus({ preventScroll: true })}
+        data-lenis-prevent
         className="terminal-scroll h-80 cursor-text overflow-y-auto p-4 font-mono text-[13px] leading-relaxed"
       >
         {lines.map((l, i) => (

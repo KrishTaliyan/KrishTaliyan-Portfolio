@@ -1,10 +1,11 @@
+@import 'lenis/dist/lenis.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
-    scroll-behavior: smooth;
     scroll-padding-top: 5rem;
   }
   body {
@@ -116,9 +117,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   .reveal {
     opacity: 1;
     transform: none;
@@ -150,5 +148,165 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+@keyframes slideUpIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* ---------- Split-word heading reveal ---------- */
+.split-w {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+.split-w > span {
+  display: inline-block;
+  transform: translateY(110%) rotate(4deg);
+  transform-origin: left bottom;
+  transition: transform 1s cubic-bezier(0.2, 0.75, 0.2, 1);
+}
+.split.is-visible .split-w > span {
+  transform: none;
+}
+
+/* ---------- Custom cursor ---------- */
+html.has-cursor,
+html.has-cursor * {
+  cursor: none !important;
+}
+html.has-cursor input,
+html.has-cursor textarea {
+  cursor: text !important;
+}
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 95;
+  pointer-events: none;
+  opacity: 0;
+  display: none;
+}
+html.has-cursor .cursor-dot,
+html.has-cursor .cursor-ring {
+  display: block;
+}
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 999px;
+  background: #34d399;
+  transition: opacity 0.3s;
+}
+.cursor-ring {
+  width: 0;
+  height: 0;
+  transition: opacity 0.3s;
+}
+.cursor-ring::before {
+  content: '';
+  position: absolute;
+  left: -18px;
+  top: -18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 0.35s,
+    border-color 0.35s;
+}
+.cursor-ring.is-hover::before {
+  transform: scale(1.6);
+  border-color: rgba(52, 211, 153, 0.7);
+  background: rgba(52, 211, 153, 0.08);
+}
+.cursor-ring.has-label::before {
+  transform: scale(2.6);
+  border-color: transparent;
+  background: linear-gradient(135deg, #34d399, #a78bfa);
+}
+.cursor-ring.is-field::before {
+  transform: scale(0.4);
+  opacity: 0;
+}
+.cursor-ring.is-down::before {
+  transform: scale(0.8);
+}
+.cursor-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  font: 600 11px/1 'JetBrains Mono', monospace;
+  letter-spacing: 0.05em;
+  color: #07080c;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.cursor-ring.has-label .cursor-label {
+  opacity: 1;
+}
+
+/* ---------- Hero entrance (starts once the preloader lifts) ---------- */
+.hero-in {
+  opacity: 0;
+}
+.is-ready .hero-in {
+  animation: fadeUp 1s cubic-bezier(0.2, 0.75, 0.2, 1) var(--d, 0ms) forwards;
+}
+.is-ready .hero-in-scale {
+  animation: fadeIn 1.4s cubic-bezier(0.2, 0.75, 0.2, 1) var(--d, 0ms) forwards;
+}
+
+/* Scroll-velocity skew for marquees */
+.velocity-skew {
+  transform: skewX(var(--skew, 0deg));
+  transition: transform 0.25s ease-out;
+}
+
+.text-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .split-w > span {
+    transform: none;
+    transition: none;
+  }
+  .hero-in {
+    opacity: 1;
+  }
+}
+
+.timeline-dot.is-lit {
+  border-color: rgba(52, 211, 153, 0.6);
+  transform: scale(1.15);
+}
+.timeline-dot.is-lit > span {
+  background: #34d399;
+  box-shadow: 0 0 14px #34d399;
+}
+
+@keyframes scrollHint {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
   }
 }

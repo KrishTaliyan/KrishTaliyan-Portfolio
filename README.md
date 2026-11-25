@@ -5,16 +5,20 @@ Personal portfolio built with **React 19 + Vite + Tailwind CSS**, deployed to Gi
 
 ## Highlights
 
-- Interactive particle-constellation hero that reacts to the cursor, typewriter role line, animated stat counters
+- **Buttery smooth scrolling** with [Lenis](https://github.com/darkroomengineering/lenis); every `#section` link glides into place
+- Intro preloader (once per visit), word-by-word heading reveals, parallax hero, magnetic buttons, custom cursor
+- Interactive particle-constellation hero, typewriter role line, animated stat counters
 - **Interactive terminal** — visitors can type `help`, `whoami`, `skills`, `projects`, `contact`, `resume`, `goto projects`…
-- Skills marquee + spotlight cards, experience timeline, filterable project grid with 3D tilt cards
-- Certificate lightbox, copy-to-clipboard contact details, and a contact form that opens the visitor's email app
-- Active-section navbar with scroll progress bar, mobile menu, reduced-motion support
+- Featured projects **stack and pin** as you scroll, with real screenshots of each live site
+- Skills marquee that leans with scroll speed, timeline that fills as you scroll, scroll-driven "Let's work together" banner
+- Certificate lightbox, copy-to-clipboard contact details, contact form that opens the visitor's email app
+- Auto-hiding navbar with sliding active pill, scroll progress bar, back-to-top ring
+- Respects `prefers-reduced-motion` (animations and smooth scroll switch off)
 
 ## Editing content
 
 All text, links, projects and certificates live in **`src/data.js`** — edit that file, no component changes needed.
-Images and the resume PDF live in `public/`.
+Images, project screenshots (`public/projects/`) and the resume PDF live in `public/`.
 
 ## Run locally
 

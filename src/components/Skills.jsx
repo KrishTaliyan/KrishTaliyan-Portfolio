@@ -1,5 +1,7 @@
+import { useRef } from 'react'
 import { skillGroups } from '../data'
 import { spotlightHandler } from '../hooks'
+import { clamp, useScrollFrame } from '../lib/scroll'
 import Reveal from './Reveal'
 import SectionHeading from './SectionHeading'
 
@@ -25,16 +27,28 @@ function Marquee({ items, reverse = false }) {
 }
 
 export default function Skills() {
+  const rows = useRef(null)
+  const idle = useRef(0)
+
+  // Marquee rows lean in the direction you scroll, proportional to scroll speed.
+  useScrollFrame((_, v) => {
+    const el = rows.current
+    if (!el) return
+    el.style.setProperty('--skew', `${clamp(-v * 0.35, -10, 10)}deg`)
+    clearTimeout(idle.current)
+    idle.current = setTimeout(() => el.style.setProperty('--skew', '0deg'), 120)
+  })
+
   return (
     <section id="skills" className="section overflow-hidden">
       <div className="absolute left-1/2 top-1/3 h-80 w-[40rem] -translate-x-1/2 rounded-full bg-iris-500/10 blur-[120px]" />
       <div className="container-x relative">
-        <SectionHeading index="02" eyebrow="Tech arsenal" title={<>The tools I <span className="gradient-text">build with</span></>}>
+        <SectionHeading index="02" eyebrow="Tech arsenal" title="The tools I" highlight="build with">
           A full-stack toolkit — from typed-out algorithms to production deployments.
         </SectionHeading>
       </div>
 
-      <div className="relative mb-14 space-y-3">
+      <div ref={rows} className="velocity-skew relative mb-14 space-y-3">
         <Marquee items={all.slice(0, Math.ceil(all.length / 2))} />
         <Marquee items={all.slice(Math.ceil(all.length / 2))} reverse />
       </div>

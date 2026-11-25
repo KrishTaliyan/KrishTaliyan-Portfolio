@@ -45,12 +45,12 @@ export function useScrollProgress() {
 }
 
 /** Counts up from 0 to `target` the first time the returned ref is on screen. */
-export function useCountUp(target, { duration = 1600, decimals = 0 } = {}) {
+export function useCountUp(target, { duration = 1600, decimals = 0, enabled = true } = {}) {
   const ref = useRef(null)
   const [value, setValue] = useState(() => (prefersReducedMotion() ? target : 0))
   useEffect(() => {
     const el = ref.current
-    if (!el || prefersReducedMotion()) return
+    if (!el || !enabled || prefersReducedMotion()) return
     let raf = 0
     const io = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return
@@ -69,7 +69,7 @@ export function useCountUp(target, { duration = 1600, decimals = 0 } = {}) {
       io.disconnect()
       cancelAnimationFrame(raf)
     }
-  }, [target, duration])
+  }, [target, duration, enabled])
   return [ref, value.toFixed(decimals)]
 }
 

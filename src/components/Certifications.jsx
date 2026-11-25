@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { certifications } from '../data'
+import { lockScroll } from '../lib/scroll'
 import { CloseIcon } from './Icons'
 import Reveal from './Reveal'
 import SectionHeading from './SectionHeading'
@@ -11,17 +12,17 @@ export default function Certifications() {
     if (!open) return
     const onKey = (e) => e.key === 'Escape' && setOpen(null)
     window.addEventListener('keydown', onKey)
-    document.body.style.overflow = 'hidden'
+    lockScroll(true)
     return () => {
       window.removeEventListener('keydown', onKey)
-      document.body.style.overflow = ''
+      lockScroll(false)
     }
   }, [open])
 
   return (
     <section id="certifications" className="section">
       <div className="container-x">
-        <SectionHeading index="05" eyebrow="Certifications" title={<>Always <span className="gradient-text">levelling up</span></>}>
+        <SectionHeading index="05" eyebrow="Certifications" title="Always" highlight="levelling up">
           Click any certificate to view it full size.
         </SectionHeading>
 

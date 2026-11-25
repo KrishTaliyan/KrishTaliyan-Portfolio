@@ -3,7 +3,7 @@ import { GithubIcon, LinkedinIcon, MailIcon } from './Icons'
 
 export default function Footer() {
   return (
-    <footer className="border-t border-white/[0.06] py-10">
+    <footer className="relative overflow-hidden border-t border-white/[0.06] pt-10">
       <div className="container-x flex flex-col items-center justify-between gap-6 md:flex-row">
         <div className="text-center md:text-left">
           <p className="font-semibold text-white">
@@ -42,6 +42,12 @@ export default function Footer() {
           ))}
         </div>
       </div>
+      <p
+        aria-hidden="true"
+        className="pointer-events-none mt-12 select-none whitespace-nowrap bg-gradient-to-b from-mint-400/25 via-iris-400/10 to-transparent bg-clip-text pb-[2vw] text-center text-[11.5vw] font-extrabold leading-[0.85] tracking-tighter text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.07)]"
+      >
+        KRISH TALIYAN
+      </p>
     </footer>
   )
 }

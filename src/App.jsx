@@ -1,13 +1,18 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import About from './components/About'
+import BackToTop from './components/BackToTop'
 import Certifications from './components/Certifications'
 import Contact from './components/Contact'
+import Cursor from './components/Cursor'
 import Footer from './components/Footer'
 import Hero from './components/Hero'
 import Journey from './components/Journey'
 import Navbar from './components/Navbar'
+import Preloader from './components/Preloader'
 import Projects from './components/Projects'
 import Skills from './components/Skills'
+import { prefersReducedMotion } from './hooks'
+import { scrollToId } from './lib/scroll'
 
 /** A soft glow that follows the cursor on devices with a mouse. */
 function CursorGlow() {
@@ -32,23 +37,39 @@ function CursorGlow() {
   )
 }
 
+// Show the intro once per browser session (and never for reduced-motion users).
+const SEEN_KEY = 'kt-intro-seen'
+const shouldShowIntro = () => !prefersReducedMotion() && !sessionStorage.getItem(SEEN_KEY)
+
 export default function App() {
-  // Links like …/KrishTaliyan-Portfolio/#projects arrive before React has rendered,
-  // so jump to the section once the page exists.
-  useEffect(() => {
-    const id = decodeURIComponent(window.location.hash.slice(1))
-    if (id) requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView())
+  const [intro, setIntro] = useState(shouldShowIntro)
+  const [ready, setReady] = useState(() => !intro)
+
+  const onReveal = useCallback(() => setReady(true), [])
+  const onDone = useCallback(() => {
+    sessionStorage.setItem(SEEN_KEY, '1')
+    setIntro(false)
   }, [])
+
+  // Links like …/KrishTaliyan-Portfolio/#projects arrive before React has rendered,
+  // so jump to the section once the page is ready.
+  useEffect(() => {
+    if (!ready) return
+    const id = decodeURIComponent(window.location.hash.slice(1))
+    if (id) requestAnimationFrame(() => scrollToId(id, { immediate: true }))
+  }, [ready])
 
   return (
     <div className="noise relative min-h-screen overflow-x-clip">
+      {intro && <Preloader onReveal={onReveal} onDone={onDone} />}
+      <Cursor />
       <CursorGlow />
       <a href="#about" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-ink-950">
         Skip to content
       </a>
       <Navbar />
       <main className="relative z-10">
-        <Hero />
+        <Hero ready={ready} />
         <About />
         <Skills />
         <Journey />
@@ -57,6 +78,7 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
+      <BackToTop />
     </div>
   )
 }

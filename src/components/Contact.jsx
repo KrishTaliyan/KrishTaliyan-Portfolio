@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { profile } from '../data'
 import { spotlightHandler } from '../hooks'
 import { CheckIcon, CopyIcon, GithubIcon, LinkedinIcon, MailIcon, PhoneIcon, SendIcon } from './Icons'
+import BigMarquee from './BigMarquee'
+import Magnetic from './Magnetic'
 import Reveal from './Reveal'
 import SectionHeading from './SectionHeading'
 
@@ -43,10 +45,12 @@ export default function Contact() {
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }))
 
   return (
-    <section id="contact" className="section overflow-hidden">
+    <section id="contact" className="section overflow-hidden !pt-10">
+      <BigMarquee items={["Let's work together", 'Open to opportunities']} />
+      <div className="h-16 sm:h-24" />
       <div className="absolute bottom-0 left-1/2 h-96 w-[50rem] -translate-x-1/2 rounded-full bg-gradient-to-r from-mint-500/15 to-iris-500/15 blur-[140px]" />
       <div className="container-x relative">
-        <SectionHeading index="06" eyebrow="Contact" title={<>Let&apos;s build something <span className="gradient-text">together</span></>}>
+        <SectionHeading index="06" eyebrow="Contact" title="Let's build something" highlight="together">
           I&apos;m currently looking for new opportunities. Whether it&apos;s a role, a project, or just to say hi — my inbox is
           always open.
         </SectionHeading>
@@ -108,9 +112,11 @@ export default function Contact() {
                   placeholder="Tell me about your project, role or idea…"
                 />
               </label>
-              <button type="submit" className="btn-primary w-full sm:w-auto">
-                Send message <SendIcon className="h-4 w-4" />
-              </button>
+              <Magnetic className="w-full sm:w-auto">
+                <button type="submit" className="btn-primary w-full sm:w-auto">
+                  Send message <SendIcon className="h-4 w-4" />
+                </button>
+              </Magnetic>
               {sent && (
                 <p className="text-sm text-mint-300" role="status">
                   Your email app should open with the message ready to send. If it didn&apos;t, email me at {profile.email}.

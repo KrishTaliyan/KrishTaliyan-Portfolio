@@ -8,7 +8,7 @@ export default function About() {
   return (
     <section id="about" className="section">
       <div className="container-x">
-        <SectionHeading index="01" eyebrow="About me" title={<>Code, coffee &amp; <span className="gradient-text">curiosity</span></>} />
+        <SectionHeading index="01" eyebrow="About me" title="Code, coffee &" highlight="curiosity" />
 
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
           <div className="space-y-5 text-base leading-relaxed text-slate-400 sm:text-lg">
